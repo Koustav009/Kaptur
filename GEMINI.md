@@ -1,4 +1,5 @@
-# Project Overview: fotoowlclone
+# Kaptur
+**Find your moments in a blink**
 
 This is a Flutter-based mobile and web application, currently serving as a clone of "FotoOwl". The project is in its early stages, utilizing the standard Flutter boilerplate.
 

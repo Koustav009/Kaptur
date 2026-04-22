@@ -1,4 +1,5 @@
-# fotoowlclone
+# Kaptur
+**Find your moments in a blink**
 
 A new Flutter project.
 
