@@ -8,11 +8,11 @@ void main() {
   // 1. We put the AuthController into Get's memory so it's ready to use.
   Get.put(AuthController());
 
-  runApp(const MyApp());
+  runApp(const KapturApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class KapturApp extends StatelessWidget {
+  const KapturApp({super.key});
 
   @override
   Widget build(BuildContext context) {
