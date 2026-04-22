@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fotoowlclone/controllers/auth_controller.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:kaptur/controllers/auth_controller.dart';
 
 /// The Screen users see AFTER a successful login.
 class HomeScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _authController.logout(),
-          )
+          ),
         ],
       ),
       body: Center(
@@ -34,10 +35,20 @@ class HomeScreen extends StatelessWidget {
             const Text("Welcome to your photo management dashboard."),
             const SizedBox(height: 32),
             // Show the token (or first few characters) as proof.
-            Obx(() => Text(
-              "JWT Token: ${_authController.userToken.value.substring(0, 10)}...",
-              style: const TextStyle(color: Colors.grey),
-            )),
+            Obx(
+              () => Text(
+                "JWT Token: ${_authController.userToken.value.substring(0, 10)}...",
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.copy),
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(text: _authController.userToken.value),
+                );
+              },
+            ),
           ],
         ),
       ),

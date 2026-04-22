@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fotoowlclone/controllers/auth_controller.dart';
 import 'package:get/get.dart';
+import 'package:kaptur/controllers/auth_controller.dart';
+import 'package:kaptur/routes/pages.dart';
 
 /// The Screen where users can log in with email/password or Google.
 class LoginScreen extends StatelessWidget {
@@ -38,27 +39,29 @@ class LoginScreen extends StatelessWidget {
               obscureText: true, // Hides the password
             ),
             const SizedBox(height: 32),
-            
+
             // Obx makes the button reactive. It listens to isLoading variable.
-            Obx(() => _authController.isLoading.value
-                ? const CircularProgressIndicator()
-                : SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _authController.login(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                        );
-                      },
-                      child: const Text("Login"),
+            Obx(
+              () => _authController.isLoading.value
+                  ? const CircularProgressIndicator()
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _authController.login(
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                          );
+                        },
+                        child: const Text("Login"),
+                      ),
                     ),
-                  )),
-            
+            ),
+
             const SizedBox(height: 16),
             const Text("OR"),
             const SizedBox(height: 16),
-            
+
             // Google Login Button
             SizedBox(
               width: double.infinity,
@@ -68,10 +71,10 @@ class LoginScreen extends StatelessWidget {
                 onPressed: () => _authController.signInWithGoogle(),
               ),
             ),
-            
+
             const SizedBox(height: 16),
             TextButton(
-              onPressed: () => Get.toNamed('/signup'),
+              onPressed: () => Get.toNamed(Routes.SIGNUP),
               child: const Text("Don't have an account? Sign Up"),
             ),
           ],

@@ -1,5 +1,5 @@
-name: fotoowlclone
-description: "A new Flutter project."
+name: kaptur
+description: "Your moments in a blink."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -39,13 +39,15 @@ dependencies:
   get: ^4.6.6
   
   # For making HTTP requests to our Spring Boot backend
-  http: ^1.2.1
+  # http: ^1.2.1
+  dio: ^5.4.3+1
   
   # For Native Google Sign In
   google_sign_in: ^6.2.1
   
   # For safely storing JWT tokens locally on the device
   flutter_secure_storage: ^9.0.0
+  rename_app: ^1.6.5
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +59,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  change_app_package_name: ^1.5.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

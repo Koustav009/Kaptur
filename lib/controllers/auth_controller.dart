@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'package:fotoowlclone/services/auth_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kaptur/routes/pages.dart';
+import 'package:kaptur/services/auth_service.dart';
 
 /// AuthController manages the state of the user's login.
 /// It uses 'GetxController' so we can access it from anywhere in the app.
@@ -42,19 +43,24 @@ class AuthController extends GetxController {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         String token = data['accessToken'];
-        
+
         // Save token securely and update state.
         await _storage.write(key: "jwt_token", value: token);
         userToken.value = token;
         isLoggedIn.value = true;
-        
+
         Get.snackbar("Success", "Login Successful!");
-        Get.offAllNamed('/home'); // Go to Home and remove all previous screens.
+        Get.offAllNamed(
+          Routes.HOME,
+        ); // Go to Home and remove all previous screens.
       } else {
         Get.snackbar("Error", "Invalid credentials. Please try again.");
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong. Please check your connection.");
+      Get.snackbar(
+        "Error",
+        "Something went wrong. Please check your connection.",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -68,7 +74,7 @@ class AuthController extends GetxController {
 
       if (response.statusCode == 200) {
         Get.snackbar("Success", "Account created! Please login.");
-        Get.toNamed('/login');
+        Get.toNamed(Routes.LOGIN);
       } else {
         Get.snackbar("Error", response.body);
       }
@@ -85,7 +91,7 @@ class AuthController extends GetxController {
       isLoading.value = true;
       // 1. Trigger Google Sign In flow on the phone.
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
+
       if (googleUser != null) {
         // 2. Send the user's Google info to our backend.
         var response = await _authService.googleLogin(
@@ -98,13 +104,13 @@ class AuthController extends GetxController {
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
           String token = data['accessToken'];
-          
+
           await _storage.write(key: "jwt_token", value: token);
           userToken.value = token;
           isLoggedIn.value = true;
-          
+
           Get.snackbar("Success", "Google Login Successful!");
-          Get.offAllNamed('/home');
+          Get.offAllNamed(Routes.HOME);
         }
       }
     } catch (e) {
@@ -120,6 +126,6 @@ class AuthController extends GetxController {
     await _googleSignIn.signOut();
     userToken.value = "";
     isLoggedIn.value = false;
-    Get.offAllNamed('/login');
+    Get.offAllNamed(Routes.LOGIN);
   }
 }

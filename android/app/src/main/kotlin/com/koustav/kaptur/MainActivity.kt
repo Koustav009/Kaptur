@@ -1,4 +1,4 @@
-package com.example.fotoowlclone
+package com.koustav.kaptur
 
 import io.flutter.embedding.android.FlutterActivity
 
