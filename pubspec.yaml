@@ -39,7 +39,7 @@ dependencies:
   get: ^4.6.6
   
   # For making HTTP requests to our Spring Boot backend
-  # http: ^1.2.1
+  http: ^1.2.1
   dio: ^5.4.3+1
   
   # For Native Google Sign In

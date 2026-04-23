@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kaptur/controllers/auth_controller.dart';
-import 'package:kaptur/routes/pages.dart';
+import 'package:kaptur/modules/auth/controllers/auth_controller.dart';
+import 'package:kaptur/routes/app_pages.dart';
+import 'package:kaptur/widgets/theme_toggle_button.dart';
 
 /// The Screen where users can log in with email/password or Google.
 class LoginScreen extends StatelessWidget {
@@ -17,7 +18,10 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(
+        title: const Text("Login"),
+        actions: const [ThemeToggleButton()],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -74,7 +78,7 @@ class LoginScreen extends StatelessWidget {
 
             const SizedBox(height: 16),
             TextButton(
-              onPressed: () => Get.toNamed(Routes.SIGNUP),
+              onPressed: () => Get.toNamed(Routes.signup),
               child: const Text("Don't have an account? Sign Up"),
             ),
           ],
@@ -83,3 +87,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+

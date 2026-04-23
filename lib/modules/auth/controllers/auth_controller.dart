@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kaptur/routes/pages.dart';
-import 'package:kaptur/services/auth_service.dart';
+import 'package:kaptur/routes/app_pages.dart';
+import 'package:kaptur/data/services/auth_service.dart';
+import 'package:kaptur/core/utils/snackbar_utils.dart';
 
 /// AuthController manages the state of the user's login.
 /// It uses 'GetxController' so we can access it from anywhere in the app.
@@ -49,17 +50,20 @@ class AuthController extends GetxController {
         userToken.value = token;
         isLoggedIn.value = true;
 
-        Get.snackbar("Success", "Login Successful!");
+        AppSnackbar.success(title: "Success", message: "Login Successful!");
         Get.offAllNamed(
-          Routes.HOME,
+          Routes.home,
         ); // Go to Home and remove all previous screens.
       } else {
-        Get.snackbar("Error", "Invalid credentials. Please try again.");
+        AppSnackbar.error(
+          title: "Error",
+          message: "Invalid credentials. Please try again.",
+        );
       }
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Something went wrong. Please check your connection.",
+      AppSnackbar.error(
+        title: "Error",
+        message: "Something went wrong. Please check your connection.",
       );
     } finally {
       isLoading.value = false;
@@ -73,13 +77,16 @@ class AuthController extends GetxController {
       var response = await _authService.register(name, email, password);
 
       if (response.statusCode == 200) {
-        Get.snackbar("Success", "Account created! Please login.");
-        Get.toNamed(Routes.LOGIN);
+        AppSnackbar.success(
+          title: "Success",
+          message: "Account created! Please login.",
+        );
+        Get.toNamed(Routes.login);
       } else {
-        Get.snackbar("Error", response.body);
+        AppSnackbar.error(title: "Error", message: response.body);
       }
     } catch (e) {
-      Get.snackbar("Error", "Could not create account.");
+      AppSnackbar.error(title: "Error", message: "Could not create account.");
     } finally {
       isLoading.value = false;
     }
@@ -109,12 +116,15 @@ class AuthController extends GetxController {
           userToken.value = token;
           isLoggedIn.value = true;
 
-          Get.snackbar("Success", "Google Login Successful!");
-          Get.offAllNamed(Routes.HOME);
+          AppSnackbar.success(
+            title: "Success",
+            message: "Google Login Successful!",
+          );
+          Get.offAllNamed(Routes.home);
         }
       }
     } catch (e) {
-      Get.snackbar("Error", "Google Sign In failed.");
+      AppSnackbar.error(title: "Error", message: "Google Sign In failed.");
     } finally {
       isLoading.value = false;
     }
@@ -126,6 +136,7 @@ class AuthController extends GetxController {
     await _googleSignIn.signOut();
     userToken.value = "";
     isLoggedIn.value = false;
-    Get.offAllNamed(Routes.LOGIN);
+    Get.offAllNamed(Routes.login);
   }
 }
+

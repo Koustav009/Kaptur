@@ -2,50 +2,51 @@ import 'package:flutter/material.dart';
 
 /// ─────────────────────────────────────────────────────────────
 ///  FotoOwl — Centralised Theme
-///
-///  Usage in GetMaterialApp:
-///    theme:       AppTheme.light,
-///    darkTheme:   AppTheme.dark,
-///    themeMode:   ThemeMode.system,   // or .light / .dark
+///  Palette inspired by MyWisdom Healthcare UI
+///  Primary  : Soft Violet / Indigo
+///  Secondary: Calm Teal / Mint
 /// ─────────────────────────────────────────────────────────────
 
 abstract class AppTheme {
   // ── Brand palette ──────────────────────────────────────────
 
-  // Primary accent — a warm amber that reads well on both themes
-  static const Color _primaryLight = Color(0xFFE8A838);
-  static const Color _primaryDark = Color(0xFFF2BC5E);
+  // Primary accent — soft violet (calm, trustworthy, modern)
+  static const Color _primaryLight = Color(0xFF6B5FE4); // medium violet
+  static const Color _primaryDark = Color(
+    0xFF8B82F0,
+  ); // lighter violet for dark bg
+
+  // Secondary accent — calm teal / mint green
+  static const Color _secondaryLight = Color(0xFF3CBFB4); // teal
+  static const Color _secondaryDark = Color(
+    0xFF57D4C9,
+  ); // lighter teal for dark bg
 
   // Surfaces
-  static const Color _bgLight = Color(0xFFF7F4EF); // warm ivory
-  static const Color _bgDark = Color(0xFF0F1218); // deep midnight
+  static const Color _bgLight = Color(0xFFF4F3FB); // very light lavender-white
+  static const Color _bgDark = Color(0xFF0E0E1A); // deep dark violet-black
   static const Color _surfaceLight = Color(0xFFFFFFFF);
-  static const Color _surfaceDark = Color(0xFF1A2030); // navy card
+  static const Color _surfaceDark = Color(0xFF1C1B2E); // dark navy-violet card
 
   // On-colors (text/icons drawn on top of surfaces)
-  static const Color _onBgLight = Color(0xFF1A1A2E);
-  static const Color _onBgDark = Color(0xFFECE8DF);
+  static const Color _onBgLight = Color(0xFF1A1835); // deep indigo-black
+  static const Color _onBgDark = Color(0xFFE8E6F8); // soft lavender-white
 
   // Muted / hint text
-  static const Color _hintLight = Color(0xFF8A8A9A);
-  static const Color _hintDark = Color(0xFF6B7280);
+  static const Color _hintLight = Color(0xFF9A98B8);
+  static const Color _hintDark = Color(0xFF6B6890);
 
   // Divider / border
-  static const Color _borderLight = Color(0xFFDDD8CF);
-  static const Color _borderDark = Color(0xFF2C3347);
+  static const Color _borderLight = Color(0xFFDDDAF0);
+  static const Color _borderDark = Color(0xFF2E2C4A);
 
   // Error
   static const Color _error = Color(0xFFE05B5B);
 
   // ── Typography ─────────────────────────────────────────────
-  //  Body: 'DM Sans' (clean, modern sans)
-  //  Display: slight weight variation — no external font needed;
-  //  you can swap fontFamily to 'Playfair Display' or 'DM Serif Display'
-  //  once you add them to pubspec.yaml.
 
   static TextTheme _buildTextTheme(Color onBackground) {
     return TextTheme(
-      // Large brand heading on auth screens
       displayMedium: TextStyle(
         fontSize: 30,
         fontWeight: FontWeight.w700,
@@ -53,14 +54,12 @@ abstract class AppTheme {
         height: 1.2,
         color: onBackground,
       ),
-      // Section titles
       headlineSmall: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         letterSpacing: -0.2,
         color: onBackground,
       ),
-      // Normal body
       bodyLarge: TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w400,
@@ -71,7 +70,6 @@ abstract class AppTheme {
         fontWeight: FontWeight.w400,
         color: onBackground.withOpacity(0.75),
       ),
-      // Buttons
       labelLarge: const TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w600,
@@ -192,7 +190,7 @@ abstract class AppTheme {
     colorScheme: ColorScheme.light(
       primary: _primaryLight,
       onPrimary: Colors.white,
-      secondary: _primaryLight,
+      secondary: _secondaryLight, // ← teal accent
       onSecondary: Colors.white,
       surface: _surfaceLight,
       onSurface: _onBgLight,
@@ -232,8 +230,8 @@ abstract class AppTheme {
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
       primary: _primaryDark,
-      onPrimary: Colors.black,
-      secondary: _primaryDark,
+      onPrimary: Colors.white,
+      secondary: _secondaryDark, // ← teal accent
       onSecondary: Colors.black,
       surface: _surfaceDark,
       onSurface: _onBgDark,

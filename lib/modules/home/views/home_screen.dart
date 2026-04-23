@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:kaptur/controllers/auth_controller.dart';
+import 'package:kaptur/modules/auth/controllers/auth_controller.dart';
+import 'package:kaptur/widgets/theme_toggle_button.dart';
 
 /// The Screen users see AFTER a successful login.
 class HomeScreen extends StatelessWidget {
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Fotoowl Home"),
         actions: [
+          const ThemeToggleButton(),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _authController.logout(),
@@ -55,3 +57,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+

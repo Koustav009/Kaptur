@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kaptur/controllers/auth_controller.dart';
+import 'package:kaptur/modules/auth/controllers/auth_controller.dart';
+import 'package:kaptur/widgets/theme_toggle_button.dart';
 
 /// ─────────────────────────────────────────────────────────────
 ///  SignupScreen
@@ -65,64 +66,74 @@ class _SignupScreenState extends State<SignupScreen>
     return Scaffold(
       // No AppBar — full-bleed custom header
       body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeIn,
-          child: SlideTransition(
-            position: _slideUp,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 48),
+        child: Stack(
+          children: [
+            FadeTransition(
+              opacity: _fadeIn,
+              child: SlideTransition(
+                position: _slideUp,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 48),
 
-                  // ── Brand / Logo block ─────────────────────
-                  _BrandHeader(isDark: isDark, colorScheme: cs, textTheme: tt),
+                      // ── Brand / Logo block ─────────────────────
+                      _BrandHeader(
+                        isDark: isDark,
+                        colorScheme: cs,
+                        textTheme: tt,
+                      ),
 
-                  const SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
-                  // ── Form card ─────────────────────────────
-                  _FormCard(
-                    nameCtrl: _nameCtrl,
-                    emailCtrl: _emailCtrl,
-                    passwordCtrl: _passwordCtrl,
-                    obscurePassword: _obscurePassword,
-                    onToggleObscure: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
-                    auth: _auth,
-                    isDark: isDark,
-                    theme: theme,
-                  ),
+                      // ── Form card ─────────────────────────────
+                      _FormCard(
+                        nameCtrl: _nameCtrl,
+                        emailCtrl: _emailCtrl,
+                        passwordCtrl: _passwordCtrl,
+                        obscurePassword: _obscurePassword,
+                        onToggleObscure: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
+                        auth: _auth,
+                        isDark: isDark,
+                        theme: theme,
+                      ),
 
-                  const SizedBox(height: 28),
+                      const SizedBox(height: 28),
 
-                  // ── Already have account ───────────────────
-                  Center(
-                    child: TextButton(
-                      onPressed: () => Get.back(),
-                      child: Text.rich(
-                        TextSpan(
-                          text: "Already have an account? ",
-                          style: tt.bodyMedium,
-                          children: [
+                      // ── Already have account ───────────────────
+                      Center(
+                        child: TextButton(
+                          onPressed: () => Get.back(),
+                          child: Text.rich(
                             TextSpan(
-                              text: "Log in",
-                              style: TextStyle(
-                                color: cs.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              text: "Already have an account? ",
+                              style: tt.bodyMedium,
+                              children: [
+                                TextSpan(
+                                  text: "Log in",
+                                  style: TextStyle(
+                                    color: cs.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
 
-                  const SizedBox(height: 24),
-                ],
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
+            const Positioned(top: 10, right: 10, child: ThemeToggleButton()),
+          ],
         ),
       ),
     );
@@ -344,3 +355,4 @@ class _GoogleIcon extends StatelessWidget {
     );
   }
 }
+
