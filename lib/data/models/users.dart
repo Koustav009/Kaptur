@@ -1,5 +1,5 @@
 class User {
-  final int id;
+  final int? id;
   final String name;
   final String email;
   final String? provider;
@@ -7,7 +7,7 @@ class User {
   final String? imageUrl;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
     this.provider,
@@ -24,5 +24,16 @@ class User {
       providerId: json['provider_id'],
       imageUrl: json['image_url'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'provider': provider,
+      'provider_id': providerId,
+      'image_url': imageUrl,
+    };
   }
 }
