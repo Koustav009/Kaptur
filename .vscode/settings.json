@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "E:/Project/fotoowl-clone-fromscratch/fotoowl-frontend-app/linux"
+  "cmake.sourceDirectory": "E:/Project/fotoowl-clone-fromscratch/fotoowl-frontend-app/linux",
+  "dart.flutterSdkPath": ".fvm/versions/3.41.7"
 }
