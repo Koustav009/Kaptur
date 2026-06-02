@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -38,7 +39,7 @@ class AuthController extends GetxController {
       userToken.value = token;
       currentUser.value = User.fromJson(userData);
       isLoggedIn.value = true;
-      
+
       // Auto-navigate to home if already logged in
       Future.delayed(const Duration(milliseconds: 100), () {
         if (Get.currentRoute == Routes.login) {
@@ -57,7 +58,7 @@ class AuthController extends GetxController {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         String token = data['accessToken'];
-        
+
         // Save token securely
         await _secureStorage.write(key: "jwt_token", value: token);
         userToken.value = token;
@@ -88,7 +89,7 @@ class AuthController extends GetxController {
       isLoading.value = true;
       var response = await _authService.register(name, email, password);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.created) {
         AppSnackbar.success(title: "Success", message: "Account created!");
         Get.toNamed(Routes.login);
       } else {
@@ -129,7 +130,10 @@ class AuthController extends GetxController {
           }
 
           isLoggedIn.value = true;
-          AppSnackbar.success(title: "Success", message: "Google Login Successful!");
+          AppSnackbar.success(
+            title: "Success",
+            message: "Google Login Successful!",
+          );
           Get.offAllNamed(Routes.home);
         }
       }

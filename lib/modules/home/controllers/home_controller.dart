@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../../data/models/event_model.dart';
+import 'package:kaptur/data/models/event_model.dart';
 
 class HomeController extends GetxController {
   // Mock data for events
@@ -36,10 +36,11 @@ class HomeController extends GetxController {
 
   // Calculated Stats
   int get totalEvents => events.length;
-  
+
   int get totalImages => events.fold(0, (sum, event) => sum + event.imageCount);
-  
-  double get totalStorageMb => events.fold(0.0, (sum, event) => sum + event.sizeInMb);
+
+  double get totalStorageMb =>
+      events.fold(0.0, (sum, event) => sum + event.sizeInMb);
 
   String get formattedTotalStorage {
     if (totalStorageMb > 1024) {
