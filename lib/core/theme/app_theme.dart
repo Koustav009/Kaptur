@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// ─────────────────────────────────────────────────────────────
-///  FotoOwl — Centralised Theme
+///  Kaptur — Centralised Theme
 ///  Palette inspired by MyWisdom Healthcare UI
 ///  Primary  : Soft Violet / Indigo
 ///  Secondary: Calm Teal / Mint

@@ -179,7 +179,7 @@ class _BrandHeader extends StatelessWidget {
         const SizedBox(height: 10),
 
         Text(
-          "Join FotoOwl and start sharing moments.",
+          "Join Kaptur and start sharing moments.",
           style: textTheme.bodyMedium,
         ),
       ],

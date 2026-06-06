@@ -1,7 +1,7 @@
 # Kaptur — AI Agent Context
 
 ## Project Overview
-Kaptur ("Find your moments in a blink") is a Flutter-based photo/event management mobile app — a clone of "FotoOwl". It lets users authenticate (email/password + Google Sign-In), view a dashboard of photo events with stats, and manage their memories. The backend is a separate Spring Boot project at `../fotoowl-backend/`.
+Kaptur ("Find your moments in a blink") is a Flutter-based photo/event management mobile app — a clone of "FotoOwl". It lets users authenticate (email/password + Google Sign-In), view a dashboard of photo events with stats, and manage their memories. The backend is a separate Spring Boot project at `../Kaptur-backend/`.
 
 ## Tech Stack
 - **Framework:** Flutter 3.41.7 (managed via FVM — `.fvmrc`)
