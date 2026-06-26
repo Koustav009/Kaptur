@@ -29,18 +29,18 @@ class AuthService {
 
   /// Sends Google User data to our backend to get a JWT.
   Future<http.Response> googleLogin({
-    required String name,
-    required String email,
+    // required String name,
+    // required String email,
     required String id,
-    String? photoUrl,
+    // String? photoUrl,
   }) async {
     return _apiClient.post(
       ApiConstants.googleLoginPath,
       body: {
-        'name': name,
-        'email': email,
+        // 'name': name,
+        // 'email': email,
         'id': id,
-        'photoUrl': photoUrl,
+        // 'photoUrl': photoUrl,
       },
     );
   }

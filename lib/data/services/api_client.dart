@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kaptur/core/utils/app_logger.dart';
+import 'package:kaptur/data/storage/storage_service.dart';
 import 'api_constants.dart';
 
 /// A centralized API client that handles base URL, headers, and HTTP methods.
 /// Use this class for all network communications to ensure consistency.
 class ApiClient {
-  final _storage = const FlutterSecureStorage();
+  final StorageService _storage = Get.find<StorageService>();
 
   /// Private generic request method.
   /// Handles the common logic: URI construction, JSON encoding, and JWT headers.
@@ -26,7 +27,7 @@ class ApiClient {
     );
 
     // b. Retrieve the stored JWT token (if any).
-    String? token = await _storage.read(key: "jwt_token");
+    String? token = await _storage.getToken();
 
     // c. Setup standard headers.
     final Map<String, String> headers = {

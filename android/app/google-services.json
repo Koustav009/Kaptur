@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "509892833686",
+    "project_id": "kaptur-001",
+    "storage_bucket": "kaptur-001.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509892833686:android:43892805cdd875a6e26db7",
+        "android_client_info": {
+          "package_name": "com.koustav.kaptur"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5bVWeADuAjXB7uiirpyumIDyOOgNqfEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
