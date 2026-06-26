@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kaptur/core/utils/app_logger.dart';
 import 'package:kaptur/routes/app_pages.dart';
 import 'package:kaptur/data/services/auth_service.dart';
 import 'package:kaptur/core/utils/snackbar_utils.dart';
@@ -26,11 +27,10 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Check if the user is already logged in when the app starts.
     checkLoginStatus();
   }
 
-  /// Checks if a token and user details exist.
+  /// Restores user session from storage (called by AuthBinding on login screen).
   void checkLoginStatus() async {
     String? token = await _secureStorage.read(key: "jwt_token");
     var userData = _userStorage.read("user_details");
@@ -39,13 +39,9 @@ class AuthController extends GetxController {
       userToken.value = token;
       currentUser.value = User.fromJson(userData);
       isLoggedIn.value = true;
-
-      // Auto-navigate to home if already logged in
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (Get.currentRoute == Routes.login) {
-          Get.offAllNamed(Routes.home);
-        }
-      });
+      LoggerUtility.debug(
+        'Session restored for: ${currentUser.value?.email ?? "unknown"}',
+      );
     }
   }
 
@@ -53,6 +49,7 @@ class AuthController extends GetxController {
   Future<void> login(String email, String password) async {
     try {
       isLoading.value = true;
+      LoggerUtility.info('Attempting login for: $email');
       var response = await _authService.login(email, password);
 
       if (response.statusCode == 200) {
@@ -71,12 +68,17 @@ class AuthController extends GetxController {
         }
 
         isLoggedIn.value = true;
+        LoggerUtility.info('Login successful for: $email');
         AppSnackbar.success(title: "Success", message: "Login Successful!");
         Get.offAllNamed(Routes.home);
       } else {
+        LoggerUtility.warning(
+          'Login failed for: $email — status: ${response.statusCode}',
+        );
         AppSnackbar.error(title: "Error", message: "Invalid credentials.");
       }
-    } catch (e) {
+    } catch (e, st) {
+      LoggerUtility.error('Login error for: $email', e, st);
       AppSnackbar.error(title: "Error", message: "Login failed.");
     } finally {
       isLoading.value = false;
@@ -87,15 +89,21 @@ class AuthController extends GetxController {
   Future<void> register(String name, String email, String password) async {
     try {
       isLoading.value = true;
+      LoggerUtility.info('Attempting registration for: $email');
       var response = await _authService.register(name, email, password);
 
       if (response.statusCode == HttpStatus.created) {
+        LoggerUtility.info('Registration successful for: $email');
         AppSnackbar.success(title: "Success", message: "Account created!");
         Get.toNamed(Routes.login);
       } else {
+        LoggerUtility.warning(
+          'Registration failed for: $email — status: ${response.statusCode}',
+        );
         AppSnackbar.error(title: "Error", message: response.body);
       }
-    } catch (e) {
+    } catch (e, st) {
+      LoggerUtility.error('Registration error for: $email', e, st);
       AppSnackbar.error(title: "Error", message: "Could not create account.");
     } finally {
       isLoading.value = false;
@@ -106,6 +114,7 @@ class AuthController extends GetxController {
   Future<void> signInWithGoogle() async {
     try {
       isLoading.value = true;
+      LoggerUtility.info('Attempting Google sign-in');
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser != null) {
@@ -130,14 +139,24 @@ class AuthController extends GetxController {
           }
 
           isLoggedIn.value = true;
+          LoggerUtility.info(
+            'Google login successful for: ${googleUser.email}',
+          );
           AppSnackbar.success(
             title: "Success",
             message: "Google Login Successful!",
           );
           Get.offAllNamed(Routes.home);
+        } else {
+          LoggerUtility.warning(
+            'Google backend auth failed — status: ${response.statusCode}',
+          );
         }
+      } else {
+        LoggerUtility.debug('Google sign-in cancelled by user');
       }
-    } catch (e) {
+    } catch (e, st) {
+      LoggerUtility.error('Google sign-in error', e, st);
       AppSnackbar.error(title: "Error", message: "Google Sign In failed.");
     } finally {
       isLoading.value = false;
@@ -146,6 +165,9 @@ class AuthController extends GetxController {
 
   /// Logs the user out.
   void logout() async {
+    LoggerUtility.info(
+      'Logging out user: ${currentUser.value?.email ?? "unknown"}',
+    );
     await _secureStorage.delete(key: "jwt_token");
     await _userStorage.remove("user_details");
     await _googleSignIn.signOut();

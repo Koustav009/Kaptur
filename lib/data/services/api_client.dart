@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kaptur/core/utils/app_logger.dart';
 import 'api_constants.dart';
 
 /// A centralized API client that handles base URL, headers, and HTTP methods.
@@ -18,8 +19,12 @@ class ApiClient {
   }) async {
     // a. Create the full URI with optional query parameters.
     // NOTE: queryParameters expects Map<String, dynamic>? but values are usually Strings.
-    final uri = Uri.parse('${ApiConstants.baseUrl}$path').replace(queryParameters: queryParams?.map((key, value) => MapEntry(key, value.toString())));
-    
+    final uri = Uri.parse('${ApiConstants.baseUrl}$path').replace(
+      queryParameters: queryParams?.map(
+        (key, value) => MapEntry(key, value.toString()),
+      ),
+    );
+
     // b. Retrieve the stored JWT token (if any).
     String? token = await _storage.read(key: "jwt_token");
 
@@ -30,6 +35,7 @@ class ApiClient {
     };
 
     // d. Execute the appropriate HTTP method.
+    LoggerUtility.debug('$method ${uri.path}');
     http.Response response;
     try {
       switch (method.toUpperCase()) {
@@ -37,22 +43,36 @@ class ApiClient {
           response = await http.get(uri, headers: headers);
           break;
         case 'POST':
-          response = await http.post(uri, headers: headers, body: jsonEncode(body));
+          response = await http.post(
+            uri,
+            headers: headers,
+            body: jsonEncode(body),
+          );
           break;
         case 'PUT':
-          response = await http.put(uri, headers: headers, body: jsonEncode(body));
+          response = await http.put(
+            uri,
+            headers: headers,
+            body: jsonEncode(body),
+          );
           break;
         case 'DELETE':
-          // Using a different approach for DELETE with body if needed, 
-          // but standard http package delete doesn't take body. 
+          // Using a different approach for DELETE with body if needed,
+          // but standard http package delete doesn't take body.
           // For now, standard delete is fine.
-          response = await http.delete(uri, headers: headers, body: jsonEncode(body));
+          response = await http.delete(
+            uri,
+            headers: headers,
+            body: jsonEncode(body),
+          );
           break;
         default:
           throw Exception("HTTP Method $method not supported");
       }
+      LoggerUtility.debug('$method ${uri.path} → ${response.statusCode}');
       return response;
-    } catch (e) {
+    } catch (e, st) {
+      LoggerUtility.error('$method ${uri.path} failed', e, st);
       // Re-throw or handle network errors as needed.
       rethrow;
     }
@@ -66,17 +86,29 @@ class ApiClient {
   }
 
   /// POST: Use for creating data or sending sensitive information.
-  Future<http.Response> post(String path, {dynamic body, Map<String, dynamic>? queryParams}) {
+  Future<http.Response> post(
+    String path, {
+    dynamic body,
+    Map<String, dynamic>? queryParams,
+  }) {
     return _request(path, 'POST', body: body, queryParams: queryParams);
   }
 
   /// PUT: Use for updating existing data.
-  Future<http.Response> put(String path, {dynamic body, Map<String, dynamic>? queryParams}) {
+  Future<http.Response> put(
+    String path, {
+    dynamic body,
+    Map<String, dynamic>? queryParams,
+  }) {
     return _request(path, 'PUT', body: body, queryParams: queryParams);
   }
 
   /// DELETE: Use for removing data.
-  Future<http.Response> delete(String path, {dynamic body, Map<String, dynamic>? queryParams}) {
+  Future<http.Response> delete(
+    String path, {
+    dynamic body,
+    Map<String, dynamic>? queryParams,
+  }) {
     return _request(path, 'DELETE', body: body, queryParams: queryParams);
   }
 }

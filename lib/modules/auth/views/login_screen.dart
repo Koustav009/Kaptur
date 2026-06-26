@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaptur/core/utils/app_logger.dart';
 import 'package:kaptur/modules/auth/controllers/auth_controller.dart';
 import 'package:kaptur/routes/app_pages.dart';
 import 'package:kaptur/widgets/theme_toggle_button.dart';
@@ -45,6 +46,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    LoggerUtility.info("In login screen ");
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final tt = theme.textTheme;
@@ -120,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen>
                               keyboardType: TextInputType.emailAddress,
                               decoration: const InputDecoration(
                                 labelText: "Email",
-                                prefixIcon:
-                                    Icon(Icons.mail_outline_rounded),
+                                prefixIcon: Icon(Icons.mail_outline_rounded),
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -132,8 +133,9 @@ class _LoginScreenState extends State<LoginScreen>
                               obscureText: _obscurePassword,
                               decoration: InputDecoration(
                                 labelText: "Password",
-                                prefixIcon:
-                                    const Icon(Icons.lock_outline_rounded),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline_rounded,
+                                ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword
@@ -141,8 +143,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         : Icons.visibility_outlined,
                                   ),
                                   onPressed: () => setState(
-                                    () =>
-                                        _obscurePassword = !_obscurePassword,
+                                    () => _obscurePassword = !_obscurePassword,
                                   ),
                                 ),
                               ),
@@ -159,8 +160,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         child: SizedBox(
                                           width: 24,
                                           height: 24,
-                                          child:
-                                              CircularProgressIndicator(
+                                          child: CircularProgressIndicator(
                                             strokeWidth: 2.5,
                                             color: cs.primary,
                                           ),
@@ -253,11 +253,7 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               ),
             ),
-            const Positioned(
-              top: 10,
-              right: 10,
-              child: ThemeToggleButton(),
-            ),
+            const Positioned(top: 10, right: 10, child: ThemeToggleButton()),
           ],
         ),
       ),
