@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kaptur/core/utils/app_logger.dart';
-import 'package:kaptur/data/models/users.dart';
+import 'package:kaptur/data/models/user.dart';
 import 'package:kaptur/data/storage/storage_keys.dart';
 
 /// Centralized storage service for all persistent data.
@@ -48,6 +48,7 @@ class StorageService extends GetxService {
   Future<bool> get hasSession async {
     final token = await getToken();
     final user = getUser();
+    LoggerUtility.debug('Session check: token=$token, user=$user');
     return token != null && user != null;
   }
 

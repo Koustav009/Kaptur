@@ -3,6 +3,7 @@ import 'package:kaptur/data/models/event_model.dart';
 
 class HomeController extends GetxController {
   // Mock data for events
+
   final RxList<EventModel> events = <EventModel>[
     EventModel(
       id: '1',

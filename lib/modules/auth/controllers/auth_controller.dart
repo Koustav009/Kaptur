@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kaptur/core/utils/app_logger.dart';
+import 'package:kaptur/core/utils/snackbar_utils.dart';
+import 'package:kaptur/data/models/user.dart';
+import 'package:kaptur/data/services/auth_service.dart';
 import 'package:kaptur/data/storage/storage_service.dart';
 import 'package:kaptur/routes/app_pages.dart';
-import 'package:kaptur/data/services/auth_service.dart';
-import 'package:kaptur/core/utils/snackbar_utils.dart';
-import 'package:kaptur/data/models/users.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = AuthService();
@@ -37,7 +38,7 @@ class AuthController extends GetxController {
     try {
       await _googleSignIn.initialize(
         serverClientId:
-            '571822273181-0m2f66eii7silsjk5nt9dk2fvhodvopo.apps.googleusercontent.com',
+            '571822273181-29n1ssccnpenv47ee4lvrjt0op70tf32.apps.googleusercontent.com',
       );
       _isGoogleInitialized = true;
       LoggerUtility.info("GoogleSignIn v7 initialized successfully");
@@ -154,6 +155,8 @@ class AuthController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        LoggerUtility.debug('Login response for google login : $data');
+
         final String accessToken = data['accessToken'];
 
         await _storage.saveToken(accessToken);
