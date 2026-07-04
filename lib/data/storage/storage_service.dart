@@ -43,6 +43,17 @@ class StorageService extends GetxService {
     LoggerUtility.debug('User details cleared');
   }
 
+  // ── Non-secure: Theme Mode ─────────────────────────────
+
+  String? getThemeMode() {
+    return _box.read<String>(StorageKey.themeMode.name);
+  }
+
+  Future<void> saveThemeMode(String mode) async {
+    await _box.write(StorageKey.themeMode.name, mode);
+    LoggerUtility.debug('Theme mode saved: $mode');
+  }
+
   // ── Convenience: Session checks ────────────────────────
 
   Future<bool> get hasSession async {
