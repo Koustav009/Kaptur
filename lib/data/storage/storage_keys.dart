@@ -1,2 +1,2 @@
 /// All persistent storage keys used in the app.
-enum StorageKey { kaptur, jwtToken, userDetails, themeMode }
+enum StorageKey { kaptur, jwtToken, refreshToken, userDetails, themeMode }

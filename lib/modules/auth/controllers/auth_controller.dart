@@ -71,10 +71,17 @@ class AuthController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final String token = data['accessToken'];
+        
+        // Extract tokens (backend returns both camelCase and snake_case)
+        final String accessToken = data['accessToken'] ?? data['access_token'];
+        final String? refreshToken = data['refreshToken'] ?? data['refresh_token'];
 
-        await _storage.saveToken(token);
-        userToken.value = token;
+        await _storage.saveToken(accessToken);
+        userToken.value = accessToken;
+
+        if (refreshToken != null) {
+          await _storage.saveRefreshToken(refreshToken);
+        }
 
         if (data['user'] != null) {
           final User user = User.fromJson(data['user']);
@@ -157,10 +164,16 @@ class AuthController extends GetxController {
         final data = jsonDecode(response.body);
         LoggerUtility.debug('Login response for google login : $data');
 
-        final String accessToken = data['accessToken'];
+        // Extract tokens (backend returns both camelCase and snake_case)
+        final String accessToken = data['accessToken'] ?? data['access_token'];
+        final String? refreshToken = data['refreshToken'] ?? data['refresh_token'];
 
         await _storage.saveToken(accessToken);
         userToken.value = accessToken;
+
+        if (refreshToken != null) {
+          await _storage.saveRefreshToken(refreshToken);
+        }
 
         if (data['user'] != null) {
           final User user = User.fromJson(data['user']);

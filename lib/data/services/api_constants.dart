@@ -8,4 +8,9 @@ class ApiConstants {
   static const String loginPath = "/auth/login";
   static const String registerPath = "/auth/register";
   static const String googleLoginPath = "/auth/google";
+  static const String refreshTokenPath = "/auth/refresh";
+
+  // Event Endpoints (for creating, reading, updating, and deleting events)
+  // We attach this path to baseUrl, e.g., http://10.0.2.2:8080/events
+  static const String eventsPath = "/events";
 }

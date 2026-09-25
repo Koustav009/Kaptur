@@ -44,4 +44,12 @@ class AuthService {
       },
     );
   }
+
+  /// Refreshes the access token using the refresh token.
+  Future<http.Response> refreshToken(String refreshToken) async {
+    return _apiClient.post(
+      ApiConstants.refreshTokenPath,
+      body: {'refreshToken': refreshToken},
+    );
+  }
 }

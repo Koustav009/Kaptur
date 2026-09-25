@@ -26,6 +26,21 @@ class StorageService extends GetxService {
     LoggerUtility.debug('JWT token cleared');
   }
 
+  // ── Secure: Refresh Token ──────────────────────────────
+
+  Future<String?> getRefreshToken() =>
+      _secure.read(key: StorageKey.refreshToken.name);
+
+  Future<void> saveRefreshToken(String token) async {
+    await _secure.write(key: StorageKey.refreshToken.name, value: token);
+    LoggerUtility.debug('Refresh token saved');
+  }
+
+  Future<void> clearRefreshToken() async {
+    await _secure.delete(key: StorageKey.refreshToken.name);
+    LoggerUtility.debug('Refresh token cleared');
+  }
+
   // ── Non-secure: User Details ───────────────────────────
 
   User? getUser() {
@@ -65,6 +80,7 @@ class StorageService extends GetxService {
 
   Future<void> clearAll() async {
     await clearToken();
+    await clearRefreshToken();
     await clearUser();
     LoggerUtility.info('All storage cleared');
   }
