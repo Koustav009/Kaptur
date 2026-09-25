@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kaptur/core/utils/app_logger.dart';
 import 'package:kaptur/modules/auth/controllers/auth_controller.dart';
 import 'package:kaptur/routes/app_pages.dart';
+import 'package:kaptur/widgets/responsive_center.dart';
 import 'package:kaptur/widgets/theme_toggle_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -62,7 +63,9 @@ class _LoginScreenState extends State<LoginScreen>
                 position: _slideUp,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
+                  child: ResponsiveCenter(
+                    maxWidth: 480,
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 48),
@@ -249,6 +252,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                       const SizedBox(height: 24),
                     ],
+                    ),
                   ),
                 ),
               ),

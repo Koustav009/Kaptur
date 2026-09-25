@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../widgets/responsive_center.dart';
 import '../../../widgets/theme_toggle_button.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../controllers/home_controller.dart';
@@ -47,7 +48,8 @@ class HomeScreen extends GetView<HomeController> {
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(20.0),
-          child: Column(
+          child: ResponsiveCenter(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // --- Welcome Section ---
@@ -105,23 +107,27 @@ class HomeScreen extends GetView<HomeController> {
               ),
               const SizedBox(height: 16),
 
-              // --- Events List ---
+              // --- Events List (adaptive: 1 column on phones, more on wide screens) ---
               Obx(
                 () => controller.events.isEmpty
                     ? _buildEmptyState(context)
-                    : ListView.separated(
+                    : GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: 80),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 480,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 3.2,
+                        ),
                         itemCount: controller.events.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final event = controller.events[index];
-                          return _buildEventTile(context, event);
-                        },
+                        itemBuilder: (context, index) =>
+                            _buildEventTile(context, controller.events[index]),
                       ),
               ),
             ],
+            ),
           ),
         ),
       ),

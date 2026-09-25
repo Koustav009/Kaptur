@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kaptur/modules/auth/controllers/auth_controller.dart';
+import 'package:kaptur/widgets/responsive_center.dart';
 import 'package:kaptur/widgets/theme_toggle_button.dart';
 
 /// ─────────────────────────────────────────────────────────────
@@ -74,7 +75,9 @@ class _SignupScreenState extends State<SignupScreen>
                 position: _slideUp,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
+                  child: ResponsiveCenter(
+                    maxWidth: 480,
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 48),
@@ -128,6 +131,7 @@ class _SignupScreenState extends State<SignupScreen>
 
                       const SizedBox(height: 24),
                     ],
+                    ),
                   ),
                 ),
               ),
