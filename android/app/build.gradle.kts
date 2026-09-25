@@ -38,6 +38,22 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // Dev / prod product flavors. Both keep the same applicationId on purpose:
+    // Firebase (google-services.json) and the Google Sign-In OAuth client are
+    // registered for "com.koustav.kaptur"; a ".dev" suffix would break Google
+    // Sign-In in the dev flavor until a separate OAuth client is registered.
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            resValue("string", "app_name", "Kaptur Dev")
+        }
+        create("prod") {
+            dimension = "environment"
+            resValue("string", "app_name", "Kaptur")
+        }
+    }
 }
 
 flutter {

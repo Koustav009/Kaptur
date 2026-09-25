@@ -1,8 +1,11 @@
+import 'package:kaptur/core/config/app_config.dart';
+
 /// This file contains all the network-related constants.
-/// Centralizing them here makes it easy to switch between local, staging, and production URLs.
+/// Endpoints live here; the base URL comes from [AppConfig] so it follows
+/// the active flavor (dev/prod) and the platform (Android emulator vs web).
 class ApiConstants {
-  // Use 10.0.2.2 for Android Emulator to reach your local machine's localhost (127.0.0.1).
-  static const String baseUrl = "http://10.0.2.2:8080";
+  // Resolved by flavor + platform, see AppConfig.baseUrl.
+  static String get baseUrl => AppConfig.baseUrl;
 
   // Auth Endpoints
   static const String loginPath = "/auth/login";
