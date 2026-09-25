@@ -10,7 +10,8 @@ import 'package:kaptur/data/services/event_service.dart';
 /// NOTE FOR LEARNERS:
 /// 1. We use GetX (`RxList`, `RxBool`) for reactive state management. When `events` changes, the UI updates automatically.
 /// 2. We inject `EventService` to talk to our Spring Boot backend REST endpoints (`/events`).
-/// 3. If the network is offline or backend is unreachable, we gracefully fall back to local mock data so you can still test the UI.
+/// 3. Errors from the backend or network are surfaced to the user via snackbars —
+///    no silent fallback data, so real failures are never masked.
 class HomeController extends GetxController {
   final EventService _eventService = EventService();
 
@@ -36,14 +37,17 @@ class HomeController extends GetxController {
         LoggerUtility.info("Loaded ${events.length} events from backend.");
       } else {
         LoggerUtility.error("Failed to load events: ${response.statusCode}");
-        _loadFallbackData();
+        AppSnackbar.error(
+          title: "Load Failed",
+          message: "Server returned status ${response.statusCode}.",
+        );
       }
-    } catch (e) {
-      LoggerUtility.error("Network error fetching events, loading fallback data", e);
-      // Fallback to local sample events if backend server is not running locally
-      if (events.isEmpty) {
-        _loadFallbackData();
-      }
+    } catch (e, st) {
+      LoggerUtility.error("Network error fetching events", e, st);
+      AppSnackbar.error(
+        title: "Network Error",
+        message: "Could not reach the server. Check your connection.",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -78,19 +82,12 @@ class HomeController extends GetxController {
       } else {
         AppSnackbar.error(title: "Creation Failed", message: "Server returned status ${response.statusCode}");
       }
-    } catch (e) {
-      LoggerUtility.error("Error creating event online, creating locally for offline preview", e);
-      // Offline fallback behavior
-      final localEvent = EventModel(
-        evntId: DateTime.now().millisecondsSinceEpoch.toString(),
-        eventTitle: title.trim(),
-        description: description?.trim(),
-        eventDate: eventDate?.trim(),
-        eventLocation: eventLocation?.trim(),
-        createdAt: DateTime.now(),
+    } catch (e, st) {
+      LoggerUtility.error("Error creating event", e, st);
+      AppSnackbar.error(
+        title: "Creation Failed",
+        message: "Could not reach the server. Event was not created.",
       );
-      events.insert(0, localEvent);
-      AppSnackbar.info(title: "Offline Mode", message: "Created event locally.");
     } finally {
       isLoading.value = false;
     }
@@ -130,20 +127,12 @@ class HomeController extends GetxController {
       } else {
         AppSnackbar.error(title: "Update Failed", message: "Server returned status ${response.statusCode}");
       }
-    } catch (e) {
-      LoggerUtility.error("Error updating event online, updating locally", e);
-      // Offline fallback behavior
-      final index = events.indexWhere((e) => e.id == id);
-      if (index != -1) {
-        events[index] = events[index].copyWith(
-          eventTitle: title.trim(),
-          description: description?.trim(),
-          eventDate: eventDate?.trim(),
-          eventLocation: eventLocation?.trim(),
-          updatedAt: DateTime.now(),
-        );
-      }
-      AppSnackbar.info(title: "Offline Mode", message: "Updated event locally.");
+    } catch (e, st) {
+      LoggerUtility.error("Error updating event", e, st);
+      AppSnackbar.error(
+        title: "Update Failed",
+        message: "Could not reach the server. Event was not updated.",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -159,11 +148,12 @@ class HomeController extends GetxController {
       } else {
         AppSnackbar.error(title: "Delete Failed", message: "Server returned status ${response.statusCode}");
       }
-    } catch (e) {
-      LoggerUtility.error("Error deleting event online, removing locally", e);
-      // Offline fallback removal
-      events.removeWhere((e) => e.id == id);
-      AppSnackbar.info(title: "Offline Mode", message: "Deleted event locally.");
+    } catch (e, st) {
+      LoggerUtility.error("Error deleting event", e, st);
+      AppSnackbar.error(
+        title: "Delete Failed",
+        message: "Could not reach the server. Event was not deleted.",
+      );
     }
   }
 
@@ -180,47 +170,5 @@ class HomeController extends GetxController {
       return '${(totalStorageMb / 1024).toStringAsFixed(2)} GB';
     }
     return '${totalStorageMb.toStringAsFixed(1)} MB';
-  }
-
-  /// Loads initial fallback mock data if backend is offline or empty.
-  void _loadFallbackData() {
-    events.assignAll([
-      EventModel(
-        evntId: '1',
-        eventTitle: 'Wedding Anniversary',
-        description: 'Celebrating 10 wonderful years together with family and friends.',
-        eventLocation: 'Goa Beach Resort',
-        createdAt: DateTime.now().subtract(const Duration(days: 5)),
-        imageCount: 124,
-        sizeInMb: 450.5,
-      ),
-      EventModel(
-        evntId: '2',
-        eventTitle: 'Beach Trip 2024',
-        description: 'Weekend getaway to the coast with college buddies.',
-        eventLocation: 'Pondicherry',
-        createdAt: DateTime.now().subtract(const Duration(days: 12)),
-        imageCount: 85,
-        sizeInMb: 320.0,
-      ),
-      EventModel(
-        evntId: '3',
-        eventTitle: 'Birthday Party',
-        description: 'Surprise 30th birthday celebration at downtown rooftop.',
-        eventLocation: 'Bangalore',
-        createdAt: DateTime.now().subtract(const Duration(days: 20)),
-        imageCount: 210,
-        sizeInMb: 890.2,
-      ),
-      EventModel(
-        evntId: '4',
-        eventTitle: 'Corporate Meetup',
-        description: 'Annual tech leadership conference and networking event.',
-        eventLocation: 'Hyderabad IT Park',
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        imageCount: 45,
-        sizeInMb: 150.8,
-      ),
-    ]);
   }
 }

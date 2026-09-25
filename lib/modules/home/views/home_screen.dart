@@ -32,13 +32,16 @@ class HomeScreen extends GetView<HomeController> {
             onPressed: () => controller.fetchEvents(),
           ),
           const ThemeToggleButton(),
-          IconButton(
-            icon: const Icon(Icons.logout_rounded),
-            tooltip: "Logout",
-            onPressed: () => _authController.logout(),
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu_rounded),
+              tooltip: "Menu",
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
           ),
         ],
       ),
+      endDrawer: _buildDrawer(context),
       body: RefreshIndicator(
         onRefresh: () => controller.fetchEvents(),
         child: SingleChildScrollView(
@@ -128,6 +131,120 @@ class HomeScreen extends GetView<HomeController> {
         icon: const Icon(Icons.add),
         backgroundColor: cs.primary,
         foregroundColor: Colors.white,
+      ),
+    );
+  }
+
+  /// Right-side navigation drawer showing the user's profile photo,
+  /// name, email and a logout option.
+  Widget _buildDrawer(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // --- User Profile Section ---
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: cs.primary.withOpacity(0.08),
+                border: Border(
+                  bottom: BorderSide(color: theme.dividerColor),
+                ),
+              ),
+              child: Obx(() {
+                final user = _authController.currentUser.value;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildUserAvatar(user?.imageUrl, radius: 38),
+                    const SizedBox(height: 12),
+                    Text(
+                      user?.name.isNotEmpty == true ? user!.name : "Kaptur User",
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      user?.email ?? "",
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                );
+              }),
+            ),
+
+            const Spacer(),
+
+            // --- Logout Option ---
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.logout_rounded, color: Colors.red),
+              title: const Text(
+                "Logout",
+                style: TextStyle(color: Colors.red),
+              ),
+              onTap: () => _showLogoutConfirmation(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Shows confirmation popup before logging out.
+  void _showLogoutConfirmation(BuildContext context) {
+    Get.back();
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to logout?"),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Get.back();
+              _authController.logout();
+            },
+            child: const Text("Logout"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Circular profile photo from [imageUrl]; falls back to a person icon
+  /// when the user has no photo or the image fails to load.
+  Widget _buildUserAvatar(String? imageUrl, {double radius = 20}) {
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: Theme.of(Get.context!).colorScheme.primary.withOpacity(0.15),
+      child: ClipOval(
+        child: imageUrl != null && imageUrl.isNotEmpty
+            ? Image.network(
+                imageUrl,
+                width: radius * 2,
+                height: radius * 2,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) =>
+                    Icon(Icons.person_rounded, size: radius),
+              )
+            : Icon(Icons.person_rounded, size: radius),
       ),
     );
   }

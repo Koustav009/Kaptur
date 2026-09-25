@@ -61,6 +61,31 @@ class AuthController extends GetxController {
     }
   }
 
+  /// Persists the session from an auth response.
+  /// The backend's AuthResponse is flat:
+  /// {accessToken, refreshToken, tokenType, kptId, email, name, imageUrl, role}.
+  Future<void> _persistSession(Map<String, dynamic> data) async {
+    final String accessToken = data['accessToken'] ?? data['access_token'];
+    final String? refreshToken = data['refreshToken'] ?? data['refresh_token'];
+
+    await _storage.saveToken(accessToken);
+    userToken.value = accessToken;
+
+    if (refreshToken != null) {
+      await _storage.saveRefreshToken(refreshToken);
+    }
+
+    final User user = User(
+      kptId: data['kptId']?.toString(),
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      imageUrl: data['imageUrl'],
+    );
+    await _storage.saveUser(user);
+    currentUser.value = user;
+    isLoggedIn.value = true;
+  }
+
   // ==================== EMAIL/PASSWORD AUTH ====================
 
   Future<void> login(String email, String password) async {
@@ -71,25 +96,8 @@ class AuthController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        
-        // Extract tokens (backend returns both camelCase and snake_case)
-        final String accessToken = data['accessToken'] ?? data['access_token'];
-        final String? refreshToken = data['refreshToken'] ?? data['refresh_token'];
+        await _persistSession(data);
 
-        await _storage.saveToken(accessToken);
-        userToken.value = accessToken;
-
-        if (refreshToken != null) {
-          await _storage.saveRefreshToken(refreshToken);
-        }
-
-        if (data['user'] != null) {
-          final User user = User.fromJson(data['user']);
-          await _storage.saveUser(user);
-          currentUser.value = user;
-        }
-
-        isLoggedIn.value = true;
         AppSnackbar.success(title: "Success", message: "Login Successful!");
         Get.offAllNamed(Routes.home);
       } else {
@@ -163,25 +171,8 @@ class AuthController extends GetxController {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         LoggerUtility.debug('Login response for google login : $data');
+        await _persistSession(data);
 
-        // Extract tokens (backend returns both camelCase and snake_case)
-        final String accessToken = data['accessToken'] ?? data['access_token'];
-        final String? refreshToken = data['refreshToken'] ?? data['refresh_token'];
-
-        await _storage.saveToken(accessToken);
-        userToken.value = accessToken;
-
-        if (refreshToken != null) {
-          await _storage.saveRefreshToken(refreshToken);
-        }
-
-        if (data['user'] != null) {
-          final User user = User.fromJson(data['user']);
-          await _storage.saveUser(user);
-          currentUser.value = user;
-        }
-
-        isLoggedIn.value = true;
         AppSnackbar.success(title: "Success", message: "Welcome back!");
         Get.offAllNamed(Routes.home);
       } else {

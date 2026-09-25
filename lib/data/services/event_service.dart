@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
+
 import 'api_client.dart';
 import 'api_constants.dart';
 
 /// This service handles all HTTP network requests related to Events.
-/// 
+///
 /// NOTE FOR LEARNERS:
 /// 1. Creating: `POST /events` sends new event data as JSON.
 /// 2. Reading: `GET /events` gets all events created by the logged-in user.
@@ -34,9 +35,11 @@ class EventService {
       ApiConstants.eventsPath,
       body: {
         'eventTitle': title,
-        if (description != null && description.isNotEmpty) 'description': description,
+        if (description != null && description.isNotEmpty)
+          'description': description,
         if (eventDate != null && eventDate.isNotEmpty) 'eventDate': eventDate,
-        if (eventLocation != null && eventLocation.isNotEmpty) 'eventLocation': eventLocation,
+        if (eventLocation != null && eventLocation.isNotEmpty)
+          'eventLocation': eventLocation,
       },
     );
   }
@@ -53,9 +56,11 @@ class EventService {
       '${ApiConstants.eventsPath}/$id',
       body: {
         'eventTitle': title,
-        if (description != null && description.isNotEmpty) 'description': description,
+        if (description != null && description.isNotEmpty)
+          'description': description,
         if (eventDate != null && eventDate.isNotEmpty) 'eventDate': eventDate,
-        if (eventLocation != null && eventLocation.isNotEmpty) 'eventLocation': eventLocation,
+        if (eventLocation != null && eventLocation.isNotEmpty)
+          'eventLocation': eventLocation,
       },
     );
   }
