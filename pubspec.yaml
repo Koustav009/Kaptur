@@ -39,8 +39,14 @@ dependencies:
   get: ^4.6.6
   
   # For making HTTP requests to our Spring Boot backend
-  # http: ^1.2.1
+  http: ^1.2.1
   dio: ^5.4.3+1
+  
+  # For picking photos from the gallery (event detail upload flow)
+  image_picker: ^1.2.0
+  
+  # For drag & drop image picking on web (alongside the gallery picker)
+  desktop_drop: ^0.4.4
   
   # For Native Google Sign In
   google_sign_in: ^7.2.0

@@ -43,4 +43,16 @@ class AppConfig {
     if (isProd) return prodBaseUrl;
     return kIsWeb ? 'http://localhost:8080' : 'http://10.0.2.2:8080';
   }
+
+  /// Rewrites host-local TUSd URLs (uploads/downloads) so they are reachable
+  /// from the running platform. The backend returns `localhost:1080` URLs,
+  /// but an Android emulator must use `10.0.2.2` to reach the host machine —
+  /// the same rule [baseUrl] follows in dev. Prod/web URLs pass through.
+  static String resolveMediaUrl(String url) {
+    if (isProd || kIsWeb) return url;
+    return url.replaceFirst(
+      RegExp(r'^https?://(localhost|127\.0\.0\.1)(?=[:/]|$)'),
+      'http://10.0.2.2',
+    );
+  }
 }

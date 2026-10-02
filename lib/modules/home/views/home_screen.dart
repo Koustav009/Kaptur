@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/app_logger.dart';
+import '../../../routes/app_pages.dart';
 import '../../../widgets/responsive_center.dart';
 import '../../../widgets/theme_toggle_button.dart';
 import '../../auth/controllers/auth_controller.dart';
@@ -375,14 +377,22 @@ class HomeScreen extends GetView<HomeController> {
     final theme = Theme.of(context);
     final dateStr = DateFormat('MMM dd, yyyy').format(event.createdAt);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Row(
+        onTap: () {
+          LoggerUtility.debug('Opening event details for ${event.id}');
+          Get.toNamed(Routes.eventDetail, arguments: event);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: theme.dividerColor),
+          ),
+          child: Row(
         children: [
           Container(
             width: 50,
@@ -461,8 +471,10 @@ class HomeScreen extends GetView<HomeController> {
             ],
           ),
         ],
+        ),
       ),
-    );
+    ),
+  );
   }
 
   /// Shows a modal dialog to Create or Update an Event (`POST` or `PUT`).
